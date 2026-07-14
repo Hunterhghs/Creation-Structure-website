@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creation Structure — Fractals, Emergence &amp; the Mathematics of Form</title>
-  <meta name="description" content="Interactive exploration of fractal geometry, L-systems, emergent patterns, strange attractors, and the mathematics of creation — from Mandelbrot to reaction-diffusion.">
+  <meta name="description" content="Creation Structure explores how simple iterative rules generate the complex forms we see in nature, economies, and mathematics — from the Mandelbrot set to reaction-diffusion and beyond.">
   <meta name="author" content="H Heuristics">
   <meta name="theme-color" content="#fafaf8">
   <link rel="canonical" href="https://creastruc.hheuristics.com/">
 
   <meta property="og:title" content="Creation Structure">
-  <meta property="og:description" content="Interactive exploration of the mathematics that generates form.">
+  <meta property="og:description" content="The mathematics that generates form — interactive exploration of fractals, L‑systems, emergence, and strange attractors.">
   <meta property="og:type" content="website">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"Creation Structure","url":"https://creastruc.hheuristics.com/","description":"Interactive exploration of fractal geometry, L-systems, emergent patterns, and strange attractors.","publisher":{"@type":"Organization","name":"H Heuristics"}}
+  {"@context":"https://schema.org","@type":"WebSite","name":"Creation Structure","url":"https://creastruc.hheuristics.com/","description":"Interactive exploration of the mathematics that generates form — fractals, L‑systems, emergence, and strange attractors.","publisher":{"@type":"Organization","name":"H Heuristics"}}
   </script>
 </head>
 <body>
@@ -33,12 +33,13 @@
 <!-- Navigation                                                        -->
 <!-- ================================================================ -->
 <nav class="nav-bar" role="navigation" aria-label="Main Navigation">
-  <a class="nav-brand" href="#fractals">
+  <a class="nav-brand" href="#overview">
     <div class="logo-glyph" aria-hidden="true">&#x221e;</div>
     <span class="nav-label">Creation&nbsp;Structure</span>
   </a>
   <ul class="nav-tabs" role="tablist">
-    <li role="presentation"><button class="nav-tab active" role="tab" data-page="fractals" aria-selected="true">Fractals</button></li>
+    <li role="presentation"><button class="nav-tab active" role="tab" data-page="overview" aria-selected="true">Overview</button></li>
+    <li role="presentation"><button class="nav-tab" role="tab" data-page="fractals" aria-selected="false">Fractals</button></li>
     <li role="presentation"><button class="nav-tab" role="tab" data-page="lsystems" aria-selected="false">L‑Systems</button></li>
     <li role="presentation"><button class="nav-tab" role="tab" data-page="emergence" aria-selected="false">Emergence</button></li>
     <li role="presentation"><button class="nav-tab" role="tab" data-page="attractors" aria-selected="false">Attractors</button></li>
@@ -49,24 +50,115 @@
 <main id="main-content" class="page-wrapper">
 
   <!-- ============================================================== -->
-  <!-- 1. FRACTALS                                                    -->
+  <!-- 0. OVERVIEW — Landing Page                                      -->
   <!-- ============================================================== -->
-  <section id="page-fractals" class="page-section active" role="tabpanel">
+  <section id="page-overview" class="page-section active" role="tabpanel">
+
+    <div class="hero">
+      <h1><span class="accent-word">Creation Structure</span></h1>
+      <p>The observation that <strong>simple iterative rules</strong> — applied recursively — generate the intricate, organized complexity we see across nature, mathematics, and economies. From the Mandelbrot set to supply chains, the same deep principle operates: <strong>richness emerges from repetition, not from complex blueprints.</strong></p>
+    </div>
+
+    <!-- Three Pillars -->
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">&#x221e;</div>
+        <h3>Self‑Similarity</h3>
+        <p>Fractals reveal that complexity scales. Zoom into a coastline, a fern, or a market boundary and you find the same patterns repeating at every level. The <strong>fractal dimension</strong> quantifies this — a single number that captures how detail accumulates across scales.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">&#x2697;</div>
+        <h3>Emergence</h3>
+        <p>Global order from local rules. No blueprint, no central planner — just agents (chemicals, cells, firms) interacting with their immediate neighbours. Turing patterns, market clusters, and innovation fronts all arise this way.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" aria-hidden="true">&#x2304;</div>
+        <h3>Recursive Grammar</h3>
+        <p>A handful of rewrite rules, applied again and again, generate structures of staggering complexity. This is how plants grow, how languages parse, and how supply chains branch — the same algorithmic logic across domains.</p>
+      </div>
+    </div>
+
+    <!-- Five Explorations Preview -->
+    <div class="content-section">
+      <div class="text-block">
+        <h2><span class="section-num">Explore</span> Five Interactive Windows Into Creation Structure</h2>
+        <p>Each tab on this site pairs a <strong>live, interactive visualization</strong> with the story behind it — the mathematics, the history, and the connection to how economies and markets actually behave.</p>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card" style="cursor:pointer" onclick="document.querySelector('[data-page=fractals]').click()">
+        <div class="card-icon" aria-hidden="true">&#x25F7;</div>
+        <h3>Fractals &rarr;</h3>
+        <p>The Mandelbrot and Julia sets — infinite detail from <code>z &#8594; z² + c</code>. Pan, zoom, and explore the most complex object in mathematics.</p>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="document.querySelector('[data-page=lsystems]').click()">
+        <div class="card-icon" aria-hidden="true">&#x1F331;</div>
+        <h3>L‑Systems &rarr;</h3>
+        <p>Recursive grammars that generate plants, trees, and dragon curves. The algorithm behind branching in nature — and in supply chains.</p>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="document.querySelector('[data-page=emergence]').click()">
+        <div class="card-icon" aria-hidden="true">&#x25D0;</div>
+        <h3>Emergence &rarr;</h3>
+        <p>Reaction‑diffusion and cellular automata. Watch spots, stripes, and spirals form from two chemicals — Turing's theory of morphogenesis, alive in your browser.</p>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="document.querySelector('[data-page=attractors]').click()">
+        <div class="card-icon" aria-hidden="true">&#x2605;</div>
+        <h3>Attractors &rarr;</h3>
+        <p>Strange attractors map the shape of chaos. Equations that never repeat yet trace hauntingly beautiful structures — the geometry of unpredictability.</p>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="document.querySelector('[data-page=foundation]').click()">
+        <div class="card-icon" aria-hidden="true">&#x2302;</div>
+        <h3>Foundation &rarr;</h3>
+        <p>The theoretical framework. Fractal dimensions, economic diffusion, the D‑coefficient, and why creation structure is the operating system of development.</p>
+      </div>
+    </div>
+
+    <!-- Economic Connection -->
+    <div class="content-section--alt">
+      <div class="content-section-inner">
+        <div class="text-block" style="max-width:var(--content-max);margin:0 auto;">
+          <h2><span class="section-num">Why This Matters</span> From Mathematics to Economics</h2>
+          <p>Creation structure is not an aesthetic observation — it is a <strong>modeling framework</strong>. The same mathematics that generates a fractal coastline describes how economic activity diffuses across regions. The same reaction‑diffusion dynamics that pattern a zebra's stripes pattern the clustering of firms in a city.</p>
+          <p>At <strong>H Heuristics</strong>, we operationalize these principles through the <strong>Convergence Game</strong> framework. The <strong>D‑coefficient</strong> measures how far a region's economic fractal dimension deviates from the integrated whole — quantifying the gap between fragmented and convergent development. Each of the five explorations on this site illuminates one facet of that measurement.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observable Plot: Framework Overview -->
+    <div class="plot-container">
+      <h3 style="margin-bottom:var(--s-4);">The Creation Structure Spectrum</h3>
+      <p style="margin-bottom:var(--s-4);font-size:0.9375rem;">Every system — mathematical, biological, economic — sits somewhere on a spectrum from simple determinism to unbounded chaos. Creation structure occupies the fertile middle: <strong>deterministic rules producing organized complexity</strong>.</p>
+      <div id="overview-plot"></div>
+    </div>
+
+    <div class="content-section" style="padding-bottom:var(--s-16);">
+      <div class="text-block">
+        <h2><span class="section-num">Start Exploring</span></h2>
+        <p>Use the navigation tabs above to dive into each exploration. Every page combines <strong>narrative context</strong> with a <strong>live interactive visualization</strong> — built in HD with Canvas, SVG, and Observable Plot. All computation runs in your browser; nothing is pre‑rendered. The mathematics is alive.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 1. FRACTALS — Expanded                                          -->
+  <!-- ============================================================== -->
+  <section id="page-fractals" class="page-section" role="tabpanel">
 
     <div class="hero">
       <h1>The <span class="accent-word">Mandelbrot Set</span></h1>
-      <p>The most complex object in mathematics arises from the simplest possible rule: <strong>z&nbsp;&#8594;&nbsp;z²&nbsp;+&nbsp;c</strong>. Iterate that single equation and you get infinite detail — a universe of spirals, seahorses, and filaments contained within a finite boundary.</p>
+      <p>The most complex object in mathematics arises from the simplest possible rule. Iterate <strong>z&nbsp;&#8594;&nbsp;z²&nbsp;+&nbsp;c</strong> and you unlock infinite detail — a universe of spirals, seahorses, and filaments contained within a finite boundary.</p>
     </div>
 
     <div class="content-section" style="padding-top:0;">
       <div class="text-block" style="padding-top:0;">
-        <h2><span class="section-num">01</span> How It Works</h2>
-        <p>Pick a point <em>c</em> in the complex plane. Start with <em>z&nbsp;=&nbsp;0</em>. Repeatedly apply <em>z&nbsp;=&nbsp;z²&nbsp;+&nbsp;c</em>. If <em>z</em> stays bounded (doesn't escape to infinity), <em>c</em> belongs to the Mandelbrot set — colored black below. If it escapes, the <strong>escape velocity</strong> (how many iterations it took) determines the color. Points that take longer to escape reveal the intricate boundary structure.</p>
-        <p>The <strong>Julia set</strong> is the sibling: fix <em>c</em> and iterate over starting points <em>z₀</em>. Every point in the Mandelbrot set corresponds to a connected Julia set. Toggle between them below.</p>
+        <h2><span class="section-num">01</span> The Discovery</h2>
+        <p>In 1980, Benoît Mandelbrot was working at IBM's Thomas J. Watson Research Center with access to some of the most powerful computers of the era. He was investigating a deceptively simple question: for which complex numbers <em>c</em> does the iteration <em>z&nbsp;&#8594;&nbsp;z²&nbsp;+&nbsp;c</em> remain bounded? When he plotted the answer, he saw something no human had ever seen — an infinitely detailed boundary, self‑similar at every scale, now known as the <strong>Mandelbrot set</strong>.</p>
+        <p>The set is defined by a single mathematical condition: a point <em>c</em> belongs if, starting from <em>z&nbsp;=&nbsp;0</em>, the sequence never escapes to infinity. Points inside the set are black. Points outside are colored by <strong>escape velocity</strong> — how many iterations before they cross the threshold. This simple coloring rule reveals the set's intricate boundary structure: filaments, spirals, mini‑Mandelbrots, and seahorse valleys that repeat infinitely.</p>
       </div>
     </div>
 
-    <!-- Viz Card: Fractals -->
+    <!-- Viz Card -->
     <div class="viz-card" id="fractals-card">
       <div class="viz-card__toolbar">
         <div class="control-group">
@@ -101,7 +193,7 @@
         <button class="control-btn accent" id="frac-reset">Reset View</button>
       </div>
       <div class="viz-card__canvas-wrap">
-        <canvas id="fractals-canvas" width="1520" height="950" role="img" aria-label="Interactive Mandelbrot set explorer — drag to pan, scroll to zoom"></canvas>
+        <canvas id="fractals-canvas" width="1520" height="950" role="img" aria-label="Interactive Mandelbrot set explorer"></canvas>
       </div>
       <div class="viz-card__info">
         <span class="stat">Center: <span id="frac-center">—</span></span>
@@ -111,33 +203,43 @@
       </div>
     </div>
 
-    <div class="content-section">
+    <div class="content-section" style="padding-top:var(--s-8);">
       <div class="text-block">
-        <h2><span class="section-num">02</span> Why It Matters</h2>
-        <p>The Mandelbrot set isn't just beautiful — it's a proof that <strong>deterministic simplicity can generate unbounded complexity</strong>. A two-line iterative loop produces structures that never repeat, at every scale. This principle — recursive rules producing emergent richness — is the engine behind coastlines, ferns, market clusters, and the structures explored throughout this site.</p>
+        <h2><span class="section-num">02</span> Julia Sets — The Sibling</h2>
+        <p>Every point in the Mandelbrot set corresponds to a <strong>Julia set</strong>. While the Mandelbrot set varies <em>c</em> and starts from <em>z&nbsp;=&nbsp;0</em>, a Julia set fixes <em>c</em> and varies the starting point <em>z₀</em>. Points inside the Mandelbrot set produce <strong>connected</strong> Julia sets (a single piece); points outside produce <strong>disconnected</strong> Cantor dust. Toggle to Julia mode above and experiment — points near the boundary of the Mandelbrot set yield the most intricate Julia sets.</p>
+      </div>
+    </div>
+
+    <div class="content-section--alt">
+      <div class="content-section-inner">
+        <div class="text-block" style="max-width:var(--content-max);margin:0 auto;">
+          <h2><span class="section-num">03</span> Why Fractals Matter for Economics</h2>
+          <p>Mandelbrot himself spent much of his career applying fractal geometry to <strong>financial markets</strong>. He showed that cotton prices, stock returns, and exchange rates exhibit self‑similarity across timescales — a minute‑by‑minute chart looks statistically similar to a year‑by‑year chart. This invalidated the Gaussian assumptions of mainstream finance and laid the groundwork for fractal market analysis.</p>
+          <p>In the <strong>Convergence Game</strong> framework, the fractal dimension of economic boundaries — between markets, between regions, between development levels — quantifies <strong>economic integration</strong>. A smooth boundary (dimension ≈ 1.0) indicates complete integration; a highly fractal boundary (dimension approaching 2.0) indicates fragmented, uneven development. The D‑coefficient tracks movement along this spectrum.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================== -->
-  <!-- 2. L-SYSTEMS                                                    -->
+  <!-- 2. L-SYSTEMS — Expanded                                         -->
   <!-- ============================================================== -->
   <section id="page-lsystems" class="page-section" role="tabpanel">
 
     <div class="hero">
       <h1><span class="accent-word">L‑Systems</span>: The Grammar of Growth</h1>
-      <p>In 1968, biologist Aristid Lindenmayer invented a formal language to model plant development. A few <strong>rewrite rules</strong> applied recursively generate the branching architecture of trees, ferns, and entire ecosystems — the same principle behind linguistic syntax and urban hierarchy.</p>
+      <p>In 1968, biologist Aristid Lindenmayer invented a formal language to model plant development. A handful of <strong>rewrite rules</strong>, applied recursively, generate the branching architecture of trees, ferns, and entire ecosystems — the same principle behind linguistic syntax, urban hierarchy, and supply chain topology.</p>
     </div>
 
     <div class="content-section" style="padding-top:0;">
       <div class="text-block" style="padding-top:0;">
-        <h2><span class="section-num">01</span> How L‑Systems Work</h2>
-        <p>Start with an <strong>axiom</strong> (a seed string). Apply <strong>production rules</strong> that replace each character with a string. After <em>n</em> generations, the resulting string is interpreted by a <strong>turtle</strong>: <code>F</code> means "draw forward," <code>+</code> and <code>-</code> turn, and <code>[</code> / <code>]</code> branch and return. A 4‑character rule set can generate a photorealistic fern.</p>
-        <p>Choose a preset below, adjust generations and angle, and watch the structure unfold.</p>
+        <h2><span class="section-num">01</span> Lindenmayer's Insight</h2>
+        <p>Lindenmayer was studying the growth of filamentous algae when he realized that the branching pattern could be described by a <strong>formal grammar</strong> — a set of string‑rewriting rules not unlike those Noam Chomsky had developed for human language. The key difference: in an L‑system, <strong>all rules fire simultaneously</strong> (parallel rewriting), mimicking how every cell in a plant divides at once.</p>
+        <p>The system starts with an <strong>axiom</strong> — a seed string like <code>X</code>. At each generation, every character is simultaneously replaced according to the production rules. After <em>n</em> generations, the resulting string is interpreted by a <strong>turtle</strong>: <code>F</code> means "draw forward," <code>+</code> and <code>-</code> rotate, and brackets <code>[</code>&nbsp;<code>]</code> create branches that return to the branching point. A 4‑character rule set can generate a photorealistic fern.</p>
       </div>
     </div>
 
-    <!-- Viz Card: L-Systems -->
+    <!-- Viz Card -->
     <div class="viz-card" id="lsystems-card">
       <div class="viz-card__toolbar">
         <div class="control-group">
@@ -165,7 +267,7 @@
         <button class="control-btn accent" id="lsys-redraw">Draw</button>
       </div>
       <div class="viz-card__canvas-wrap" style="background:#fafaf8;">
-        <svg id="lsystems-svg" viewBox="0 0 760 520" role="img" aria-label="Interactive L-system turtle-graphics renderer"></svg>
+        <svg id="lsystems-svg" viewBox="0 0 760 520" role="img" aria-label="L-system turtle-graphics renderer"></svg>
       </div>
       <div class="viz-card__info">
         <span class="stat">Axiom: <span id="lsys-axiom">—</span></span>
@@ -176,31 +278,46 @@
 
     <div class="content-section">
       <div class="text-block">
-        <h2><span class="section-num">02</span> Beyond Botany</h2>
-        <p>L‑systems model any structure built by recursive branching: river networks, bronchial trees, supply chains, and organizational hierarchies. The same grammar that produces a dragon curve can describe the fractal layout of a corporate org chart or the diffusion pattern of a new technology through a regional economy.</p>
+        <h2><span class="section-num">02</span> The Seven Presets</h2>
+        <p>Each preset demonstrates a different class of L‑system behavior:</p>
+        <p><strong>Fractal Plant &amp; Bush</strong> — Bracketed, branching L‑systems. The <code>[</code> and <code>]</code> operators save and restore the turtle's state, creating tree‑like structures. These are the systems that launched a thousand CGI forests.</p>
+        <p><strong>Dragon Curve &amp; Gosper Curve</strong> — Space‑filling curves. After enough generations, these fill a 2D region completely. The dragon curve was discovered by NASA physicists folding paper; the Gosper curve (flowsnake) tiles the plane with a fractal boundary.</p>
+        <p><strong>Koch Snowflake &amp; Sierpiński Arrowhead</strong> — Classic fractal curves dating to the early 20th century, well before Mandelbrot coined the term "fractal." They demonstrate how recursion alone produces infinite perimeter within a finite area.</p>
+        <p><strong>Pythagoras Tree</strong> — A binary‑branching structure where each square spawns two smaller squares at 45°, recursively. Despite its simplicity, after enough generations it produces a remarkably organic silhouette.</p>
+      </div>
+    </div>
+
+    <div class="content-section--alt">
+      <div class="content-section-inner">
+        <div class="text-block" style="max-width:var(--content-max);margin:0 auto;">
+          <h2><span class="section-num">03</span> L‑Systems in Economics</h2>
+          <p>Supply chains are recursive branching structures. A manufacturer supplies distributors, who supply wholesalers, who supply retailers — each level a rewrite of the level above. The fractal dimension of a supply chain graph measures its <strong>resilience</strong>: highly branched networks (high dimension) resist disruption better than linear chains (low dimension).</p>
+          <p>Corporate org charts, technology adoption trees, and infrastructure networks all follow L‑system logic. The <strong>Convergence Game</strong> uses branching grammars to model how economic activity propagates from growth poles into surrounding regions — the same recursive grammar, applied to development geography.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================== -->
-  <!-- 3. EMERGENCE                                                    -->
+  <!-- 3. EMERGENCE — Expanded                                         -->
   <!-- ============================================================== -->
   <section id="page-emergence" class="page-section" role="tabpanel">
 
     <div class="hero">
       <h1><span class="accent-word">Emergence</span>: Order Without a Blueprint</h1>
-      <p>How do zebras get their stripes? How do fingers form from a uniform blob of tissue? Alan Turing asked these questions in 1952 and discovered that <strong>two chemicals reacting and diffusing</strong> can spontaneously generate spots, stripes, labyrinths, and spirals — no genetic blueprint required.</p>
+      <p>How does a zebra get its stripes? How do fingers form from a uniform blob of embryonic tissue? In 1952, Alan Turing — having cracked the Enigma code and laid the foundations of computer science — turned to this question and discovered something profound: <strong>two chemicals, reacting and diffusing, can spontaneously generate every pattern seen in biology.</strong></p>
     </div>
 
     <div class="content-section" style="padding-top:0;">
       <div class="text-block" style="padding-top:0;">
-        <h2><span class="section-num">01</span> The Gray‑Scott Model</h2>
-        <p>Two virtual chemicals, <strong>U</strong> and <strong>V</strong>, interact on a grid. U is fed into the system at rate <em>F</em>; V decays at rate <em>k</em>. Their local reaction (U&nbsp;+&nbsp;2V&nbsp;&#8594;&nbsp;3V) plus diffusion across neighbours produces Turing patterns. Tiny changes in <em>F</em> and <em>k</em> shift the system between spots, stripes, worms, and chaos. Click and drag to seed new patterns.</p>
-        <p>Toggle to <strong>Conway's Game of Life</strong> for another classic: three simple rules on a grid producing gliders, oscillators, and universal computation from random noise.</p>
+        <h2><span class="section-num">01</span> Turing's Last Paper</h2>
+        <p>Published in 1952, <em>"The Chemical Basis of Morphogenesis"</em> was Turing's final major work before his death in 1954. It proposed that <strong>reaction‑diffusion systems</strong> — where an activator chemical promotes its own production (and that of an inhibitor) while both diffuse at different rates — could explain how complex biological patterns arise from a homogeneous starting state.</p>
+        <p>The mechanism is counterintuitive: diffusion usually <em>smooths out</em> differences. But when the inhibitor diffuses faster than the activator (<strong>local activation, long‑range inhibition</strong>), the system becomes unstable and spontaneously organizes into spots, stripes, or labyrinths. Turing proved this mathematically; it took decades for biologists to confirm it experimentally.</p>
+        <p>The <strong>Gray‑Scott model</strong> (below) is a particularly elegant realization: two virtual chemicals, <strong>U</strong> and <strong>V</strong>, react on a grid. U is fed into the system; V decays. Their interaction produces the full catalog of Turing patterns — spots, stripes, worms, mazes, and pulsating solitons — depending on just two parameters: feed rate <em>F</em> and kill rate <em>k</em>.</p>
       </div>
     </div>
 
-    <!-- Viz Card: Emergence -->
+    <!-- Viz Card -->
     <div class="viz-card" id="emergence-card">
       <div class="viz-card__toolbar">
         <div class="control-group">
@@ -226,7 +343,7 @@
         <button class="control-btn" id="emerge-random">Seed</button>
       </div>
       <div class="viz-card__canvas-wrap">
-        <canvas id="emergence-canvas" width="760" height="520" role="img" aria-label="Interactive reaction-diffusion and cellular automata simulator"></canvas>
+        <canvas id="emergence-canvas" width="760" height="520" role="img" aria-label="Reaction-diffusion and cellular automata simulator"></canvas>
       </div>
       <div class="viz-card__info">
         <span class="stat">Frame: <span id="emerge-frame">0</span></span>
@@ -237,30 +354,41 @@
 
     <div class="content-section">
       <div class="text-block">
-        <h2><span class="section-num">02</span> Turing's Legacy</h2>
-        <p>Turing's 1952 paper <em>"The Chemical Basis of Morphogenesis"</em> was ignored for decades. Today, reaction‑diffusion models explain zebra stripes, leopard spots, fingerprint ridges, hair follicle spacing, and even the clustering patterns of businesses in a city. The principle — <strong>local activation with long‑range inhibition</strong> — is a universal pattern generator across biology, chemistry, and economics.</p>
+        <h2><span class="section-num">02</span> Conway's Game of Life</h2>
+        <p>Toggle to <strong>Game of Life</strong> mode for a different kind of emergence. John Conway's 1970 cellular automaton uses three dead‑simple rules on a grid: a live cell with 2–3 neighbours survives; a dead cell with exactly 3 neighbours becomes alive; everything else dies. From these rules, <strong>gliders, oscillators, and even universal Turing machines</strong> emerge — proof that computation itself can arise from simple local rules. The Game of Life is Turing‑complete: you could, in principle, run a web browser inside it.</p>
+      </div>
+    </div>
+
+    <div class="content-section--alt">
+      <div class="content-section-inner">
+        <div class="text-block" style="max-width:var(--content-max);margin:0 auto;">
+          <h2><span class="section-num">03</span> Emergent Economics</h2>
+          <p>Reaction‑diffusion dynamics appear wherever <strong>local activation with long‑range inhibition</strong> operates. Businesses cluster in cities (local activation — agglomeration benefits) but avoid overcrowding (long‑range inhibition — competition for customers). The result: a Turing pattern of commercial centres and residential zones, spontaneously organized.</p>
+          <p>Innovation diffusion follows the same mathematics. An innovation activates nearby adopters while the "inhibitor" of market saturation limits spread. The <strong>Convergence Game</strong> models this explicitly: the D‑coefficient falls as innovation Turing patterns transition from isolated spots (fragmented markets) to connected labyrinths (integrated economies).</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================== -->
-  <!-- 4. ATTRACTORS                                                   -->
+  <!-- 4. ATTRACTORS — Expanded                                        -->
   <!-- ============================================================== -->
   <section id="page-attractors" class="page-section" role="tabpanel">
 
     <div class="hero">
-      <h1><span class="accent-word">Strange Attractors</span>: Chaos with Structure</h1>
-      <p>Some systems are unpredictable in detail yet <strong>bounded and patterned</strong> in aggregate. Strange attractors map the space where deterministic chaos lives — equations so sensitive to initial conditions that two nearly identical starting points diverge into entirely different trajectories, yet both trace the same ghostly shape.</p>
+      <h1><span class="accent-word">Strange Attractors</span>: The Shape of Chaos</h1>
+      <p>In 1961, meteorologist Edward Lorenz made a rounding error. He entered 0.506 instead of 0.506127 into his weather simulation — and the forecast diverged completely. That accident revealed <strong>deterministic chaos</strong>: systems where tiny changes in initial conditions produce radically different outcomes, yet the system's long‑term behaviour traces a bounded, hauntingly beautiful shape called a <strong>strange attractor</strong>.</p>
     </div>
 
     <div class="content-section" style="padding-top:0;">
       <div class="text-block" style="padding-top:0;">
-        <h2><span class="section-num">01</span> How Strange Attractors Work</h2>
-        <p>Pick an equation with a handful of coefficients. Pick a random starting point. Iterate hundreds of thousands of times, plotting each point with low opacity. Points accumulate in the regions the system visits most — revealing a <strong>hidden structure</strong> that no single trajectory could show. Each coefficient set produces a unique attractor; most are boring, but some are breathtaking. The "Random Coeffs" button lets you prospect for undiscovered shapes.</p>
+        <h2><span class="section-num">01</span> The Butterfly Effect</h2>
+        <p>Lorenz's discovery shattered the Newtonian dream of a clockwork universe. His simplified weather model — just three differential equations — produced trajectories that never repeated, never settled into a steady state, yet never left a well‑defined region of phase space. That region was the <strong>Lorenz attractor</strong>, the first strange attractor ever observed. Its butterfly shape gave the "butterfly effect" its name: a butterfly flapping its wings in Brazil could, in principle, cause a tornado in Texas.</p>
+        <p>The key insight: strange attractors are <strong>fractal objects</strong>. Zoom into any region and you find more structure — infinite detail at every scale, just like the Mandelbrot set. But unlike the Mandelbrot set, strange attractors are <strong>dynamic</strong>: they describe not a set of points but a trajectory through time, never repeating, always tracing the same ghostly shape.</p>
       </div>
     </div>
 
-    <!-- Viz Card: Attractors -->
+    <!-- Viz Card -->
     <div class="viz-card" id="attractors-card">
       <div class="viz-card__toolbar">
         <div class="control-group">
@@ -298,84 +426,107 @@
           <span class="mono" id="attr-paramd-val">-1.00</span>
         </div>
         <button class="control-btn accent" id="attr-generate">Generate</button>
-        <button class="control-btn" id="attr-randomize">Random Coeffs</button>
+        <button class="control-btn" id="attr-randomize">Random</button>
       </div>
       <div class="viz-card__canvas-wrap">
-        <canvas id="attractors-canvas" width="1520" height="950" role="img" aria-label="Interactive strange attractor renderer"></canvas>
+        <canvas id="attractors-canvas" width="1520" height="950" role="img" aria-label="Strange attractor renderer"></canvas>
       </div>
       <div class="viz-card__info">
         <span class="stat">Coefficients: <span id="attr-coeffs">a=-1.40 b=1.50 c=0.80 d=-1.00</span></span>
-        <span class="stat">Points Rendered: <span id="attr-rendered">0</span></span>
-        <span>HD &middot; Chunked rendering &middot; Click Generate to redraw</span>
+        <span class="stat">Rendered: <span id="attr-rendered">0</span></span>
+        <span>Adjust sliders in real time &middot; HD histogram rendering</span>
       </div>
     </div>
 
     <div class="content-section">
       <div class="text-block">
-        <h2><span class="section-num">02</span> Chaos in Economics</h2>
-        <p>Strange attractors appear wherever feedback loops dominate: stock markets, innovation diffusion, urban growth. The economy is not a steady‑state equilibrium but a chaotic system tracing an attractor in a high‑dimensional space. Understanding the shape of that attractor — its basins, its fractal dimension — is the frontier of economic modeling.</p>
+        <h2><span class="section-num">02</span> A Zoo of Attractors</h2>
+        <p>Six types are available above, each with a different mathematical character:</p>
+        <p><strong>Clifford &amp; De Jong</strong> — Trigonometric attractors discovered by Clifford Pickover and Peter de Jong. Simple sine/cosine iterations produce astonishing variety. Most random coefficient sets yield noise, but the beautiful ones are breathtaking — hence the "Random" button for prospecting.</p>
+        <p><strong>Sprott‑Linz</strong> — Quadratic maps generalized by Julien Sprott. These produce dense, filigreed structures that look like etched glass or smoke trails.</p>
+        <p><strong>Lorenz</strong> — The original, in 3D projected to 2D. The butterfly wings emerge from just three differential equations with fixed parameters.</p>
+        <p><strong>Hénon &amp; Ikeda</strong> — Simplified discrete‑time maps that capture the essence of chaotic dynamics with just two dimensions. The Hénon map was proposed as a simplified model of the Lorenz system; the Ikeda map models light bouncing in a nonlinear optical resonator.</p>
+      </div>
+    </div>
+
+    <div class="content-section--alt">
+      <div class="content-section-inner">
+        <div class="text-block" style="max-width:var(--content-max);margin:0 auto;">
+          <h2><span class="section-num">03</span> Chaos in Economics</h2>
+          <p>Economic systems are strange attractors in a high‑dimensional space. Stock prices, growth rates, and innovation indices trace trajectories that never repeat yet never leave a bounded region — the signature of deterministic chaos. The 2008 financial crisis was a butterfly effect: a small perturbation in subprime mortgage markets, amplified through feedback loops, produced a global attractor shift.</p>
+          <p>The <strong>Convergence Game</strong> treats regional economies as coupled chaotic systems. The D‑coefficient measures how tightly a region's attractor is synchronized with the broader economy. Low D‑coefficient: the region traces the same attractor as its neighbours (integrated). High D‑coefficient: the region traces its own isolated attractor (fragmented). Development policy, in this framing, is <strong>attractor engineering</strong> — shifting a region's trajectory toward convergence.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================== -->
-  <!-- 5. FOUNDATION                                                   -->
+  <!-- 5. FOUNDATION — Expanded                                        -->
   <!-- ============================================================== -->
   <section id="page-foundation" class="page-section" role="tabpanel">
 
     <div class="hero">
-      <h1>The <span class="accent-word">Mathematics</span> That Generates Form</h1>
-      <p>Simple iterative rules produce the intricate structures we see in nature — coastlines, ferns, galaxies, and economies. This is <strong>creation structure</strong>: the observation that complexity arises not from complex blueprints but from the recursive application of simple operations.</p>
+      <h1>The <span class="accent-word">Foundation</span></h1>
+      <p>Creation structure is not metaphor — it is a <strong>modeling framework</strong> with measurable quantities. The fractal dimension of economic boundaries, the Lyapunov exponents of market trajectories, and the D‑coefficient of regional convergence are all calculable from data. This page lays out the quantitative backbone.</p>
     </div>
 
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon" aria-hidden="true">&#x221e;</div>
-        <h3>Self‑Similarity Across Scales</h3>
-        <p>Fractals reveal that complexity need not come from complex rules. The Mandelbrot set — defined by <code>z&nbsp;&#8594;&nbsp;z²&nbsp;+&nbsp;c</code> — contains infinite detail within a simple iterative loop.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" aria-hidden="true">&#x2697;</div>
-        <h3>Emergence Without a Blueprint</h3>
-        <p>Reaction‑diffusion systems show how spots, stripes, and labyrinths arise from two chemicals. No global plan — just local rules producing global order.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" aria-hidden="true">&#x2304;</div>
-        <h3>Grammar of Growth</h3>
-        <p>L‑systems model the recursive branching logic of plants, lungs, and river networks — the same principle behind linguistic syntax and urban hierarchy.</p>
+    <div class="content-section" style="padding-top:0;">
+      <div class="text-block" style="padding-top:0;">
+        <h2><span class="section-num">01</span> The D‑Coefficient</h2>
+        <p>Developed within the <strong>Convergence Game</strong> framework at H Heuristics, the D‑coefficient measures <strong>economic convergence deviation</strong>: how far a region's economic structure diverges from the integrated whole. It is calculated by comparing the fractal dimension of a region's economic boundary against the fractal dimension of the broader market. A D‑coefficient of zero indicates full integration (the region and the market share the same fractal structure). Positive values indicate fragmentation; negative values indicate over‑integration (loss of distinctive economic identity).</p>
+        <p>The coefficient is computed by box‑counting: overlay grids of varying resolution on economic indicator maps (GDP density, firm concentration, innovation intensity), count the boxes that straddle economic boundaries, and fit the power law. The slope is the fractal dimension. The D‑coefficient is the normalized difference between regional and national dimensions.</p>
       </div>
     </div>
 
+    <!-- Plot: Fractal Dimension Comparison -->
     <div class="plot-container">
-      <h3 style="margin-bottom:var(--s-4);">Fractal Dimension &rarr; Complexity Spectrum</h3>
-      <p style="margin-bottom:var(--s-4);font-size:0.9375rem;">Every structure has a fractal dimension — a measure of how detail changes with scale. Smooth objects are ~1.0; space‑filling curves hit 2.0. Natural and economic structures fall in between.</p>
+      <h3 style="margin-bottom:var(--s-4);">Fractal Dimension Across Structures</h3>
+      <p style="margin-bottom:var(--s-4);font-size:0.9375rem;">From smooth Euclidean objects (dimension ≈ 1.0) to space‑filling fractals (dimension ≈ 2.0), every structure occupies a characteristic position. Economic structures — market boundaries, supply chains, urban perimeters — sit in the fertile middle.</p>
       <div id="fd-plot"></div>
     </div>
 
+    <!-- Plot: Iteration Depth -->
     <div class="plot-container">
-      <h3 style="margin-bottom:var(--s-4);">Iteration Depth &rarr; Emergent Richness</h3>
-      <p style="margin-bottom:var(--s-4);font-size:0.9375rem;">As recursive depth increases, structural information diverges from entropy — the gap between them is where organized complexity lives.</p>
+      <h3 style="margin-bottom:var(--s-4);">Recursive Depth → Structural Information</h3>
+      <p style="margin-bottom:var(--s-4);font-size:0.9375rem;">As recursive depth increases, entropy and structural information diverge. The gap — structural information minus entropy — is a measure of how much <strong>organized complexity</strong> the system contains. Economic systems with deep recursive structure (complex supply chains, multi‑level governance) have higher structural information at every depth.</p>
       <div id="entropy-plot"></div>
     </div>
 
-    <div class="callout">
-      <h3>&#x2192; Connection: Economic Diffusion as Fractal Growth</h3>
-      <p style="margin-bottom:var(--s-4);">The same mathematics that generates a fractal coastline describes how economic activity diffuses across regions:</p>
-      <ul>
-        <li><strong>DLA &#x2192; Urban Growth</strong> — Random walkers aggregating on a seed cluster mirror how new businesses cluster around established hubs.</li>
-        <li><strong>Reaction‑Diffusion &#x2192; Innovation Spread</strong> — Turing's activator‑inhibitor dynamics model technology adoption fronts across regional economies.</li>
-        <li><strong>Fractal Dimension &#x2192; Market Boundaries</strong> — The box‑counting dimension of economic region borders quantifies market integration.</li>
-        <li><strong>L‑Systems &#x2192; Supply Chains</strong> — Recursive branching rules generate the hierarchical structure of supplier networks.</li>
-      </ul>
-      <p style="margin-top:var(--s-4);">The <strong>D‑coefficient</strong> in the Convergence Game framework measures exactly this: how far a region's economic fractal dimension deviates from the integrated whole. Creation structure is the operating system of economic development.</p>
+    <!-- Plot: Overview spectrum (used on both overview and foundation) -->
+    <div class="plot-container" id="foundation-spectrum-plot">
+      <h3 style="margin-bottom:var(--s-4);">The Creation Structure Spectrum</h3>
+      <p style="margin-bottom:var(--s-4);font-size:0.9375rem;">Systems range from static equilibrium (left) through organized complexity (centre) to chaotic turbulence (right). Creation structure occupies the fertile middle band — <strong>deterministic rules producing bounded, non‑repeating, structurally rich behaviour</strong>.</p>
+      <div id="foundation-spectrum"></div>
     </div>
 
+    <div class="callout" style="max-width:var(--content-max);margin:var(--s-8) auto;">
+      <h3>Key Equations</h3>
+      <p style="font-family:var(--font-mono);font-size:0.8125rem;line-height:2;">
+        <strong>Fractal Dimension (Box‑Counting):</strong><br>
+        D = lim<sub>ε→0</sub> log N(ε) / log(1/ε)<br><br>
+        <strong>D‑Coefficient:</strong><br>
+        D<sub>c</sub> = (D<sub>region</sub> − D<sub>national</sub>) / σ<sub>national</sub><br><br>
+        <strong>Gray‑Scott Kinetics:</strong><br>
+        ∂u/∂t = D<sub>u</sub>∇²u − uv² + F(1−u)<br>
+        ∂v/∂t = D<sub>v</sub>∇²v + uv² − (F+k)v<br><br>
+        <strong>Lyapunov Exponent (Convergence Rate):</strong><br>
+        λ = lim<sub>t→∞</sub> (1/t) ln |δx(t)| / |δx(0)|
+      </p>
+    </div>
+
+    <div class="content-section" style="padding-bottom:var(--s-16);">
+      <div class="text-block">
+        <h2><span class="section-num">02</span> From Theory to Practice</h2>
+        <p>These are not abstract exercises. The D‑coefficient has been applied to analyse regional convergence in Eastern Europe, the diffusion of digital infrastructure across Southeast Asia, and the fractal structure of innovation clusters in North America. The <strong>Convergence Game</strong> dashboard at H Heuristics operationalizes all five creation structure principles — fractals, L‑systems, emergence, attractors, and the foundation equations above — into an interactive policy simulation environment.</p>
+        <p>Creation structure is the operating system. The Convergence Game is the application layer. Together, they provide a new lens on the oldest question in economics: why do some regions converge while others diverge?</p>
+      </div>
+    </div>
   </section>
 
 </main>
 
 <footer class="site-footer" role="contentinfo">
-  <p>Creation Structure &copy; 2025 <a href="https://hheuristics.com" target="_blank" rel="noopener noreferrer">H&nbsp;Heuristics</a>. Built with Observable Plot, D3.js &amp; Canvas. Interactive visualizations rendered client‑side in HD.</p>
+  <p>Creation Structure &copy; 2025 <a href="https://hheuristics.com" target="_blank" rel="noopener noreferrer">H&nbsp;Heuristics</a>. Built with Observable Plot, D3.js &amp; Canvas. Interactive visualizations rendered client‑side in HD. A <a href="https://hheuristics.com/convergence-game" target="_blank" rel="noopener noreferrer">Convergence Game</a> project.</p>
 </footer>
 
 <script src="js/main.js"></script>
@@ -384,6 +535,7 @@
 <script src="js/emergence.js"></script>
 <script src="js/attractors.js"></script>
 <script src="js/foundation.js"></script>
+<script src="js/overview.js"></script>
 
 </body>
 </html>

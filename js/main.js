@@ -46,7 +46,7 @@
   // Handle hash on load
   function handleHash() {
     const hash = window.location.hash.replace('#', '');
-    const valid = ['fractals', 'lsystems', 'emergence', 'attractors', 'foundation'];
+    const valid = ['overview', 'fractals', 'lsystems', 'emergence', 'attractors', 'foundation'];
     if (valid.includes(hash)) {
       navigateTo(hash);
     }
@@ -65,8 +65,8 @@
 
   /* ---- Keyboard Navigation ---- */
   document.addEventListener('keydown', function (e) {
-    // Ctrl/Cmd + 1-5 to switch tabs
-    if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '5') {
+    // Ctrl/Cmd + 1-6 to switch tabs
+    if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '6') {
       e.preventDefault();
       const idx = parseInt(e.key) - 1;
       const tab = tabs[idx];
