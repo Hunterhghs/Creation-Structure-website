@@ -65,8 +65,8 @@
 
   /* ---- Keyboard Navigation ---- */
   document.addEventListener('keydown', function (e) {
-    // Ctrl/Cmd + 1-6 to switch tabs
-    if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '6') {
+    // Ctrl/Cmd + 1-5 to switch tabs
+    if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '5') {
       e.preventDefault();
       const idx = parseInt(e.key) - 1;
       const tab = tabs[idx];
