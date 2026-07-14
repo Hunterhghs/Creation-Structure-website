@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hheuristics.com/creation-structure/sitemap.xml

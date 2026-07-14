@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creation Structure — Fractals, Emergence &amp; the Mathematics of Form</title>
+  <meta name="description" content="Interactive exploration of fractal geometry, L-systems, emergent patterns, strange attractors, and the mathematics of creation — from Mandelbrot to reaction-diffusion.">
+  <meta name="author" content="H Heuristics">
+  <meta name="theme-color" content="#08080c">
+  <link rel="canonical" href="https://hheuristics.com/creation-structure/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Creation Structure">
+  <meta property="og:description" content="Interactive exploration of the mathematics that generates form — fractals, emergence, L‑systems, and strange attractors.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://hheuristics.com/creation-structure/og-image.png">
+
+  <!-- Preload Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CDN: D3.js & Observable Plot -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Creation Structure",
+    "url": "https://hheuristics.com/creation-structure/",
+    "description": "Interactive exploration of fractal geometry, L-systems, emergent patterns, and strange attractors.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "H Heuristics"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Skip Navigation -->
+  <a href="#main-content" class="nav-tab" style="position:absolute;top:-100px;left:var(--s-4);z-index:var(--z-toast)">Skip to Content</a>
+
+  <!-- ================================================================ -->
+  <!-- Navigation                                                        -->
+  <!-- ================================================================ -->
+  <nav class="nav-bar" role="navigation" aria-label="Main Navigation">
+    <div class="nav-brand">
+      <div class="logo-glyph" aria-hidden="true">&#x221e;</div>
+      <span class="nav-label">Creation&nbsp;Structure</span>
+    </div>
+    <ul class="nav-tabs" role="tablist">
+      <li role="presentation"><button class="nav-tab active" role="tab" data-page="fractals" aria-selected="true">Fractals</button></li>
+      <li role="presentation"><button class="nav-tab" role="tab" data-page="lsystems" aria-selected="false">L‑Systems</button></li>
+      <li role="presentation"><button class="nav-tab" role="tab" data-page="emergence" aria-selected="false">Emergence</button></li>
+      <li role="presentation"><button class="nav-tab" role="tab" data-page="attractors" aria-selected="false">Attractors</button></li>
+      <li role="presentation"><button class="nav-tab" role="tab" data-page="foundation" aria-selected="false">Foundation</button></li>
+    </ul>
+  </nav>
+
+  <!-- ================================================================ -->
+  <!-- Main Content                                                      -->
+  <!-- ================================================================ -->
+  <main id="main-content" class="page-wrapper">
+
+    <!-- ============================================================ -->
+    <!-- 1. FRACTALS — Mandelbrot / Julia Explorer                     -->
+    <!-- ============================================================ -->
+    <section id="page-fractals" class="page-section active" role="tabpanel" aria-labelledby="tab-fractals">
+
+      <div class="viz-container" id="fractals-container">
+        <div class="viz-toolbar">
+          <div class="control-group">
+            <span class="control-label">Set</span>
+            <button class="control-btn active" data-fractal="mandelbrot">Mandelbrot</button>
+            <button class="control-btn" data-fractal="julia">Julia</button>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Iterations</span>
+            <input type="range" class="control-slider" id="frac-iterations" min="32" max="512" value="128" step="32">
+            <span class="mono" id="frac-iter-val" style="font-size:0.75rem;min-width:2.5rem;">128</span>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Palette</span>
+            <select class="control-select" id="frac-palette">
+              <option value="inferno">Inferno</option>
+              <option value="viridis">Viridis</option>
+              <option value="magma">Magma</option>
+              <option value="plasma" selected>Plasma</option>
+              <option value="ocean">Ocean</option>
+              <option value="ice">Ice</option>
+            </select>
+          </div>
+          <div class="control-group" id="julia-controls" style="display:none;">
+            <span class="control-label">Real</span>
+            <input type="range" class="control-slider" id="julia-real" min="-200" max="200" value="-70" step="1">
+            <span class="mono" id="julia-real-val" style="font-size:0.75rem;">-0.70</span>
+            <span class="control-label">Imag</span>
+            <input type="range" class="control-slider" id="julia-imag" min="-200" max="200" value="27" step="1">
+            <span class="mono" id="julia-imag-val" style="font-size:0.75rem;">0.27</span>
+          </div>
+          <button class="control-btn accent" id="frac-reset">Reset View</button>
+        </div>
+        <div class="info-panel">
+          <span class="info-stat">Center: <span id="frac-center">—</span></span>
+          <span class="info-stat">Scale: <span id="frac-scale">—</span></span>
+          <span class="info-stat">Points: <span id="frac-points">—</span></span>
+          <span class="info-stat" style="font-size:0.6875rem;color:var(--c-text-muted);">Drag to pan · Scroll to zoom</span>
+        </div>
+        <canvas id="fractals-canvas" width="1200" height="700" role="img" aria-label="Interactive Mandelbrot set explorer"></canvas>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 2. L-SYSTEMS — Recursive Growth Grammars                      -->
+    <!-- ============================================================ -->
+    <section id="page-lsystems" class="page-section" role="tabpanel" aria-labelledby="tab-lsystems">
+
+      <div class="viz-container" id="lsystems-container">
+        <div class="viz-toolbar">
+          <div class="control-group">
+            <span class="control-label">Preset</span>
+            <select class="control-select" id="lsys-preset">
+              <option value="dragon">Dragon Curve</option>
+              <option value="sierpinski">Sierpiński Arrowhead</option>
+              <option value="plant1" selected>Fractal Plant</option>
+              <option value="plant2">Bush</option>
+              <option value="koch">Koch Snowflake</option>
+              <option value="tree">Pythagoras Tree</option>
+              <option value="gosper">Gosper Curve</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Generations</span>
+            <input type="range" class="control-slider" id="lsys-generations" min="1" max="8" value="4" step="1">
+            <span class="mono" id="lsys-gen-val" style="font-size:0.75rem;">4</span>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Angle</span>
+            <input type="range" class="control-slider" id="lsys-angle" min="5" max="180" value="25" step="1">
+            <span class="mono" id="lsys-angle-val" style="font-size:0.75rem;">25°</span>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Length</span>
+            <input type="range" class="control-slider" id="lsys-length" min="2" max="30" value="8" step="1">
+            <span class="mono" id="lsys-len-val" style="font-size:0.75rem;">8</span>
+          </div>
+        </div>
+        <div class="info-panel">
+          <span class="info-stat">Axiom: <span id="lsys-axiom">—</span></span>
+          <span class="info-stat">Rules: <span id="lsys-rules">—</span></span>
+          <span class="info-stat">String&nbsp;Length: <span id="lsys-strlen">—</span></span>
+        </div>
+        <svg id="lsystems-svg" viewBox="0 0 1200 700" role="img" aria-label="Interactive L-system renderer"></svg>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 3. EMERGENCE — Reaction-Diffusion &amp; Cellular Automata     -->
+    <!-- ============================================================ -->
+    <section id="page-emergence" class="page-section" role="tabpanel" aria-labelledby="tab-emergence">
+
+      <div class="viz-container" id="emergence-container">
+        <div class="viz-toolbar">
+          <div class="control-group">
+            <span class="control-label">Simulation</span>
+            <button class="control-btn active" data-sim="gray-scott">Gray‑Scott</button>
+            <button class="control-btn" data-sim="game-of-life">Game of Life</button>
+          </div>
+          <div class="control-group" id="gs-controls">
+            <span class="control-label">Feed (F)</span>
+            <input type="range" class="control-slider" id="gs-feed" min="10" max="60" value="36" step="1">
+            <span class="mono" id="gs-feed-val" style="font-size:0.75rem;">0.036</span>
+            <span class="control-label">Kill (k)</span>
+            <input type="range" class="control-slider" id="gs-kill" min="40" max="70" value="61" step="1">
+            <span class="mono" id="gs-kill-val" style="font-size:0.75rem;">0.061</span>
+          </div>
+          <div class="control-group" id="gol-controls" style="display:none;">
+            <span class="control-label">Speed</span>
+            <input type="range" class="control-slider" id="gol-speed" min="1" max="30" value="10" step="1">
+            <span class="mono" id="gol-speed-val" style="font-size:0.75rem;">10 fps</span>
+          </div>
+          <button class="control-btn accent" id="emerge-play">Pause</button>
+          <button class="control-btn" id="emerge-reset">Reset</button>
+          <button class="control-btn" id="emerge-random">Randomize</button>
+        </div>
+        <div class="info-panel">
+          <span class="info-stat">Frame: <span id="emerge-frame">0</span></span>
+          <span class="info-stat">Pattern: <span id="emerge-pattern">—</span></span>
+          <span class="info-stat" style="font-size:0.6875rem;color:var(--c-text-muted);">Click &amp; drag to seed · Scroll to adjust brush size</span>
+        </div>
+        <canvas id="emergence-canvas" width="800" height="600" role="img" aria-label="Interactive reaction-diffusion and cellular automata simulator"></canvas>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 4. ATTRACTORS — Strange Attractors &amp; Chaos               -->
+    <!-- ============================================================ -->
+    <section id="page-attractors" class="page-section" role="tabpanel" aria-labelledby="tab-attractors">
+
+      <div class="viz-container" id="attractors-container">
+        <div class="viz-toolbar">
+          <div class="control-group">
+            <span class="control-label">Attractor</span>
+            <select class="control-select" id="attr-type">
+              <option value="dejong">De Jong</option>
+              <option value="clifford" selected>Clifford</option>
+              <option value="sprott">Sprott‑Linz</option>
+              <option value="lorenz">Lorenz (3D)</option>
+              <option value="henon">Hénon</option>
+              <option value="ikon">Ikeda</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Points</span>
+            <select class="control-select" id="attr-points">
+              <option value="50000">50K</option>
+              <option value="200000" selected>200K</option>
+              <option value="500000">500K</option>
+              <option value="1000000">1M</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Opacity</span>
+            <input type="range" class="control-slider" id="attr-opacity" min="2" max="25" value="8" step="1">
+            <span class="mono" id="attr-opacity-val" style="font-size:0.75rem;">0.08</span>
+          </div>
+          <div class="control-group" id="attr-param-controls">
+            <span class="control-label">a</span>
+            <input type="range" class="control-slider" id="attr-param-a" min="-200" max="200" value="-140" step="1">
+            <span class="mono" id="attr-parama-val" style="font-size:0.75rem;">-1.40</span>
+            <span class="control-label">b</span>
+            <input type="range" class="control-slider" id="attr-param-b" min="-200" max="200" value="150" step="1">
+            <span class="mono" id="attr-paramb-val" style="font-size:0.75rem;">1.50</span>
+            <span class="control-label">c</span>
+            <input type="range" class="control-slider" id="attr-param-c" min="-200" max="200" value="80" step="1">
+            <span class="mono" id="attr-paramc-val" style="font-size:0.75rem;">0.80</span>
+            <span class="control-label">d</span>
+            <input type="range" class="control-slider" id="attr-param-d" min="-200" max="200" value="-100" step="1">
+            <span class="mono" id="attr-paramd-val" style="font-size:0.75rem;">-1.00</span>
+          </div>
+          <button class="control-btn accent" id="attr-regenerate">Generate</button>
+          <button class="control-btn" id="attr-randomize">Random Coeffs</button>
+        </div>
+        <div class="info-panel">
+          <span class="info-stat">Coefficients: <span id="attr-coeffs">a=-1.40 b=1.50 c=0.80 d=-1.00</span></span>
+          <span class="info-stat">Points&nbsp;Rendered: <span id="attr-rendered">0</span></span>
+        </div>
+        <canvas id="attractors-canvas" width="1200" height="700" role="img" aria-label="Interactive strange attractor renderer"></canvas>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 5. FOUNDATION — Philosophy &amp; Framework                    -->
+    <!-- ============================================================ -->
+    <section id="page-foundation" class="page-section" role="tabpanel" aria-labelledby="tab-foundation">
+
+      <div class="content-container">
+        <div class="hero-block">
+          <h1>The <span class="accent">Mathematics</span> That Generates Form</h1>
+          <p class="hero-subtitle">From the Mandelbrot set to reaction‑diffusion, simple iterative rules produce the intricate structures we see in nature — coastlines, ferns, galaxies, economies.</p>
+        </div>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="icon" aria-hidden="true">&#x221e;</div>
+            <h3>Self‑Similarity Across Scales</h3>
+            <p>Fractals reveal that complexity need not come from complex rules. The Mandelbrot set — defined by <code>z&nbsp;&#8594;&nbsp;z²&nbsp;+&nbsp;c</code> — contains infinite detail within a simple iterative loop. This is the signature of creation structure: <strong>richness from recursion</strong>.</p>
+          </div>
+          <div class="card">
+            <div class="icon" aria-hidden="true">&#x2697;</div>
+            <h3>Emergence Without a Blueprint</h3>
+            <p>Reaction‑diffusion systems (Turing patterns) show how spots, stripes, and labyrinths arise from two chemicals interacting locally. No global plan — just local rules producing global order. This is how zebra stripes, finger bones, and market clusters form.</p>
+          </div>
+          <div class="card">
+            <div class="icon" aria-hidden="true">&#x2304;</div>
+            <h3>Grammar of Growth</h3>
+            <p>L‑systems model the recursive branching logic of plants, lungs, and river networks. A handful of substitution rules generate structures of staggering complexity — the same principle behind linguistic syntax and urban hierarchy.</p>
+          </div>
+        </div>
+
+        <div class="plot-container" id="foundation-plot-1">
+          <h3 style="margin-bottom:var(--s-4);">Fractal Dimension → Complexity Spectrum</h3>
+          <p style="margin-bottom:var(--s-4);">Every structure has a fractal dimension — a measure of how detail changes with scale. Coastlines (~1.2), ferns (~1.8), and urban boundaries (~1.4) each occupy a characteristic position on this spectrum.</p>
+          <div id="fd-plot"></div>
+        </div>
+
+        <div class="plot-container" id="foundation-plot-2">
+          <h3 style="margin-bottom:var(--s-4);">Iteration Depth → Emergent Richness</h3>
+          <p style="margin-bottom:var(--s-4);">As recursive depth increases, entropy and structural information both rise — but along different trajectories. This divergence is the engine of creation structure.</p>
+          <div id="entropy-plot"></div>
+        </div>
+
+        <div class="plot-container" style="border-color:var(--c-border-active);">
+          <h3 style="margin-bottom:var(--s-4);">Connection: Economic Diffusion as Fractal Growth</h3>
+          <p style="margin-bottom:var(--s-3);">The same mathematics that generates a fractal coastline describes how economic activity diffuses across regions:</p>
+          <ul style="color:var(--c-text-secondary);font-size:0.875rem;list-style:inside;margin-bottom:var(--s-4);">
+            <li><strong>DLA → Urban Growth</strong>: Random walkers aggregating on a seed cluster mirror how new businesses cluster around established hubs.</li>
+            <li><strong>Reaction‑Diffusion → Innovation Spread</strong>: Turing’s activator‑inhibitor dynamics model technology adoption fronts across regional economies.</li>
+            <li><strong>Fractal Dimension → Market Boundaries</strong>: The box‑counting dimension of economic region borders quantifies market integration.</li>
+            <li><strong>L‑Systems → Supply Chains</strong>: Recursive branching rules generate the hierarchical structure of supplier networks.</li>
+          </ul>
+          <p>The <strong>D‑coefficient</strong> in the Convergence Game framework measures exactly this: how far a region’s economic fractal dimension deviates from the integrated whole. Creation structure isn’t just beautiful mathematics — it’s the operating system of economic development.</p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================================================================ -->
+  <!-- Footer                                                            -->
+  <!-- ================================================================ -->
+  <footer class="site-footer" role="contentinfo">
+    <p>Creation Structure &copy; 2025 <a href="https://hheuristics.com" target="_blank" rel="noopener noreferrer">H&nbsp;Heuristics</a>. Built with Observable Plot, D3.js &amp; Canvas.</p>
+  </footer>
+
+  <!-- ================================================================ -->
+  <!-- Scripts                                                           -->
+  <!-- ================================================================ -->
+  <script src="js/main.js"></script>
+  <script src="js/fractals.js"></script>
+  <script src="js/lsystems.js"></script>
+  <script src="js/emergence.js"></script>
+  <script src="js/attractors.js"></script>
+  <script src="js/foundation.js"></script>
+
+</body>
+</html>
