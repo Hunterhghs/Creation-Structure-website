@@ -1,208 +1,214 @@
 /* ============================================================
-   Creation Structure — L-Systems: Recursive Growth Grammars
+   Creation Structure — L‑Systems: Recursive Turtle Graphics
+   Rewritten for reliability, HD rendering, and interactivity
    ============================================================ */
 
 (function () {
   'use strict';
 
-  const svg = document.getElementById('lsystems-svg');
+  const svgEl = document.getElementById('lsystems-svg');
 
-  /* ---- L-System Presets ---- */
+  /* ---- L‑System Presets ---- */
   const presets = {
+    plant1: {
+      axiom: 'X',
+      rules: { X: 'F+[[X]-X]-F[-FX]+X', F: 'FF' },
+      angle: 25, startAngle: -85,
+      name: 'Fractal Plant',
+      desc: 'X→F+[[X]-X]-F[-FX]+X, F→FF'
+    },
     dragon: {
       axiom: 'FX',
       rules: { X: 'X+YF+', Y: '-FX-Y' },
       angle: 90, startAngle: 0,
-      desc: 'Dragon Curve — space‑filling fractal discovered by NASA physicists'
+      name: 'Dragon Curve',
+      desc: 'X→X+YF+, Y→-FX-Y'
     },
     sierpinski: {
       axiom: 'F-G-G',
       rules: { F: 'F-G+F+G-F', G: 'GG' },
       angle: 120, startAngle: 0,
-      desc: 'Sierpiński Arrowhead — triangle fractal approximating the Sierpiński gasket'
-    },
-    plant1: {
-      axiom: 'X',
-      rules: { X: 'F+[[X]-X]-F[-FX]+X', F: 'FF' },
-      angle: 25, startAngle: -90,
-      desc: 'Fractal Plant — classic bracketed L‑system modeling herbaceous growth'
+      name: 'Sierpiński Arrowhead',
+      desc: 'F→F-G+F+G-F, G→GG'
     },
     plant2: {
       axiom: 'Y',
       rules: { X: 'X[-FFF][+FFF]FX', Y: 'YFX[+Y][-Y]' },
       angle: 25.7, startAngle: -90,
-      desc: 'Bush — stochastic‑style branching with denser foliage'
+      name: 'Bush',
+      desc: 'X→X[-FFF][+FFF]FX, Y→YFX[+Y][-Y]'
     },
     koch: {
       axiom: 'F++F++F',
       rules: { F: 'F-F++F-F' },
       angle: 60, startAngle: 0,
-      desc: 'Koch Snowflake — one of the earliest fractal curves described (1904)'
+      name: 'Koch Snowflake',
+      desc: 'F→F-F++F-F'
     },
     tree: {
       axiom: '0',
       rules: { '1': '11', '0': '1[+0]-0' },
       angle: 45, startAngle: -90,
-      desc: 'Pythagoras Tree — binary branching producing the classic square‑based fractal'
+      name: 'Pythagoras Tree',
+      desc: '1→11, 0→1[+0]-0'
     },
     gosper: {
       axiom: 'A',
       rules: { A: 'A-B--B+A++AA+B-', B: '+A-BB--B-A++A+B' },
       angle: 60, startAngle: 0,
-      desc: 'Gosper Curve — flowsnake, a space‑filling curve discovered by Bill Gosper'
+      name: 'Gosper Curve',
+      desc: 'A→A-B--B+A++AA+B-, B→+A-BB--B-A++A+B'
     }
   };
+
+  /* ---- Drawing characters: those that produce a line segment ---- */
+  const DRAW_CHARS = new Set(['F', 'G', 'A', 'B', '0', '1']);
 
   /* ---- State ---- */
   let currentPreset = 'plant1';
   let generations = 4;
-  let angle = 25;
-  let segmentLength = 8;
-  let cachedString = '';
+  let angleDeg = 25;
 
-  /* ---- L-System String Generation ---- */
-  function generateString(axiom, rules, n) {
+  /* ---- L‑System Expansion ---- */
+  function expand(axiom, rules, n) {
     let s = axiom;
-    while (n-- > 0) {
+    for (let g = 0; g < n; g++) {
       let next = '';
       for (let i = 0; i < s.length; i++) {
         const ch = s[i];
         next += rules[ch] || ch;
       }
       s = next;
+      // Safety: cap string length to prevent browser freeze
+      if (s.length > 200000) break;
     }
     return s;
   }
 
-  /* ---- Turtle Graphics → SVG Path ---- */
-  function renderToPath(s, angleDeg, startAngleDeg) {
-    const angleRad = (angleDeg * Math.PI) / 180;
-    const startRad = (startAngleDeg * Math.PI) / 180;
-
-    // State stack for bracketed L-systems
+  /* ---- Turtle → Segments ---- */
+  function turtleWalk(s, angleRad, startRad, stepLen) {
+    const cos = Math.cos, sin = Math.sin;
     const stack = [];
     let x = 0, y = 0;
     let dir = startRad;
 
-    // Bounding box tracking
     let minX = 0, maxX = 0, minY = 0, maxY = 0;
-
-    // Collect segments
     const segments = [];
-
-    function move() {
-      const nx = x + segmentLength * Math.cos(dir);
-      const ny = y + segmentLength * Math.sin(dir);
-      segments.push({ x1: x, y1: y, x2: nx, y2: ny });
-      x = nx; y = ny;
-      minX = Math.min(minX, x); maxX = Math.max(maxX, x);
-      minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-    }
 
     for (let i = 0; i < s.length; i++) {
       const ch = s[i];
-      switch (ch) {
-        case 'F':
-        case 'G':
-        case 'A':
-        case 'B':
-        case 'X':
-        case 'Y':
-          // Forward drawing character — check context
-          const isDraw = (ch === 'F' || ch === 'G' || ch === 'A' || ch === 'B');
-          if (isDraw) move();
-          break;
-        case 'f':
-          x += segmentLength * Math.cos(dir);
-          y += segmentLength * Math.sin(dir);
-          minX = Math.min(minX, x); maxX = Math.max(maxX, x);
-          minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-          break;
-        case '+':
-          dir += angleRad;
-          break;
-        case '-':
-          dir -= angleRad;
-          break;
-        case '[':
-          stack.push({ x, y, dir });
-          break;
-        case ']':
-          if (stack.length > 0) {
-            const state = stack.pop();
-            x = state.x;
-            y = state.y;
-            dir = state.dir;
-          }
-          break;
-        case '|':
-          dir += Math.PI;
-          break;
-        // Ignore other characters (used for non-drawing expansion)
+
+      if (DRAW_CHARS.has(ch)) {
+        // Draw forward
+        const nx = x + stepLen * cos(dir);
+        const ny = y + stepLen * sin(dir);
+        segments.push({ x1: x, y1: y, x2: nx, y2: ny });
+        x = nx; y = ny;
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+
+      } else if (ch === '+') {
+        dir += angleRad;
+      } else if (ch === '-') {
+        dir -= angleRad;
+      } else if (ch === '[') {
+        stack.push({ x, y, dir });
+      } else if (ch === ']') {
+        if (stack.length > 0) {
+          const state = stack.pop();
+          x = state.x; y = state.y; dir = state.dir;
+        }
+      } else if (ch === '|') {
+        dir += Math.PI;
+      } else if (ch === 'f') {
+        // Move forward without drawing
+        x += stepLen * cos(dir);
+        y += stepLen * sin(dir);
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
       }
+      // Characters like X, Y are non-terminals — skip silently
     }
 
-    // Compute viewBox with padding
-    const padX = (maxX - minX) * 0.08 || 20;
-    const padY = (maxY - minY) * 0.08 || 20;
-    const vbX = minX - padX;
-    const vbY = minY - padY;
-    const vbW = (maxX - minX) + 2 * padX;
-    const vbH = (maxY - minY) + 2 * padY;
-
-    // Build SVG path
-    let pathD = '';
-    for (const seg of segments) {
-      pathD += `M${seg.x1.toFixed(2)},${seg.y1.toFixed(2)}L${seg.x2.toFixed(2)},${seg.y2.toFixed(2)}`;
-    }
-
-    return { pathD, viewBox: `${vbX.toFixed(1)} ${vbY.toFixed(1)} ${vbW.toFixed(1)} ${vbH.toFixed(1)}` };
+    return { segments, bounds: { minX, maxX, minY, maxY } };
   }
 
-  /* ---- SVG Rendering ---- */
+  /* ---- Render to SVG ---- */
   function render() {
     const preset = presets[currentPreset];
     const axiom = preset.axiom;
     const rules = preset.rules;
-    const useAngle = angle || preset.angle;
-    const startAngle = preset.startAngle;
+    const angleRad = (angleDeg * Math.PI) / 180;
+    const startRad = (preset.startAngle * Math.PI) / 180;
 
-    cachedString = generateString(axiom, rules, generations);
+    // Expand
+    const lstring = expand(axiom, rules, generations);
 
-    // Scale segment length based on string length for visual consistency
-    const maxSegments = Math.min(cachedString.length, 50000);
-    const scaleFactor = Math.max(0.3, Math.min(3.0, 8 / Math.log2(maxSegments + 1)));
-    const displayLength = segmentLength * scaleFactor;
-    const origLength = segmentLength;
-    // Temporarily set for path gen
-    const savedLen = segmentLength;
-    segmentLength = displayLength;
+    // Choose step length — scale inversely with complexity
+    const estimatedSegments = Math.min(lstring.length, 200000);
+    const stepLen = Math.max(0.3, Math.min(15, 12 / Math.log2(estimatedSegments / 100 + 2)));
 
-    const { pathD, viewBox } = renderToPath(cachedString, useAngle, startAngle);
-    segmentLength = savedLen;
+    // Walk
+    const { segments, bounds } = turtleWalk(lstring, angleRad, startRad, stepLen);
 
-    svg.setAttribute('viewBox', viewBox);
-    svg.innerHTML = `
-      <rect x="-10000" y="-10000" width="20000" height="20000" fill="none" />
-      <path d="${pathD}" fill="none" stroke="#00d4aa" stroke-width="${Math.max(0.5, displayLength * 0.08)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
-        <animate attributeName="stroke-dashoffset" from="100000" to="0" dur="1.5s" fill="freeze" />
+    // Compute viewBox with padding
+    const bw = bounds.maxX - bounds.minX || 1;
+    const bh = bounds.maxY - bounds.minY || 1;
+    const pad = Math.max(bw, bh) * 0.1 || 10;
+    const vbX = bounds.minX - pad;
+    const vbY = bounds.minY - pad;
+    const vbW = bw + 2 * pad;
+    const vbH = bh + 2 * pad;
+
+    // Build path
+    let pathD = '';
+    for (const seg of segments) {
+      pathD += `M${seg.x1.toFixed(2)} ${seg.y1.toFixed(2)}L${seg.x2.toFixed(2)} ${seg.y2.toFixed(2)}`;
+    }
+
+    const strokeW = Math.max(0.3, stepLen * 0.12);
+    const pathLen = segments.length; // rough
+
+    svgEl.setAttribute('viewBox', `${vbX.toFixed(1)} ${vbY.toFixed(1)} ${vbW.toFixed(1)} ${vbH.toFixed(1)}`);
+
+    svgEl.innerHTML = `
+      <rect x="${vbX - 100}" y="${vbY - 100}" width="${vbW + 200}" height="${vbH + 200}" fill="#fafaf8" />
+      <path d="${pathD}"
+            fill="none"
+            stroke="#0d7b6e"
+            stroke-width="${strokeW}"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            opacity="0.85"
+            stroke-dasharray="${pathLen * stepLen}"
+            stroke-dashoffset="${pathLen * stepLen}">
+        <animate attributeName="stroke-dashoffset"
+                 from="${pathLen * stepLen}" to="0"
+                 dur="0.6s" fill="freeze" />
       </path>
     `;
 
-    // Update info
+    // Update info bar
     document.getElementById('lsys-axiom').textContent = axiom;
-    document.getElementById('lsys-rules').textContent =
-      Object.entries(rules).map(([k, v]) => `${k}→${v}`).join(' · ');
-    document.getElementById('lsys-strlen').textContent = cachedString.length.toLocaleString();
+    document.getElementById('lsys-rules').textContent = preset.desc;
+    document.getElementById('lsys-strlen').textContent = lstring.length.toLocaleString();
   }
 
   /* ---- Controls ---- */
   document.getElementById('lsys-preset').addEventListener('change', function () {
     currentPreset = this.value;
     const preset = presets[currentPreset];
-    angle = preset.angle;
+    angleDeg = preset.angle;
     document.getElementById('lsys-angle').value = preset.angle;
     document.getElementById('lsys-angle-val').textContent = preset.angle + '°';
+    // Cap generations for complex presets
+    const maxGen = (currentPreset === 'plant2' || currentPreset === 'dragon') ? 6 : 7;
+    document.getElementById('lsys-generations').max = maxGen;
+    if (generations > maxGen) {
+      generations = maxGen;
+      document.getElementById('lsys-generations').value = maxGen;
+      document.getElementById('lsys-gen-val').textContent = maxGen;
+    }
     render();
   });
 
@@ -213,22 +219,16 @@
   });
 
   document.getElementById('lsys-angle').addEventListener('input', function () {
-    angle = parseInt(this.value);
-    document.getElementById('lsys-angle-val').textContent = angle + '°';
-    render();
+    angleDeg = parseInt(this.value);
+    document.getElementById('lsys-angle-val').textContent = angleDeg + '°';
+    // Don't auto-rerender — user clicks Draw
   });
 
-  document.getElementById('lsys-length').addEventListener('input', function () {
-    segmentLength = parseInt(this.value);
-    document.getElementById('lsys-len-val').textContent = segmentLength;
-    render();
-  });
+  document.getElementById('lsys-redraw').addEventListener('click', render);
 
   /* ---- Page Visibility ---- */
   window.addEventListener('page-shown', function (e) {
-    if (e.detail.page === 'lsystems') {
-      render();
-    }
+    if (e.detail.page === 'lsystems') render();
   });
 
   /* ---- Init ---- */

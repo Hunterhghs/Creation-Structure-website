@@ -1,35 +1,39 @@
 # Creation Structure
 
-**Interactive exploration of the mathematics that generates form.**
+**Interactive exploration of the mathematics that generates form — from Mandelbrot to reaction-diffusion.**
 
-Fractals · L‑Systems · Emergence · Strange Attractors
+Five interactive visualizations embedded within a clean, academic website. Light theme, HD rendering, built with Canvas 2D, D3.js, and Observable Plot.
 
 ---
 
-Built with Canvas 2D, D3.js, Observable Plot, and vanilla JavaScript. Five interactive visualizations in a single-page application with Veles design system (dark mathematical aesthetic).
-
 ### Pages
 
-| Tab | Visualization | Tech |
-|-----|--------------|------|
-| **Fractals** | Mandelbrot/Julia set explorer — pan, zoom, 6 color palettes, iteration control | Canvas pixels |
-| **L‑Systems** | 7 presets (Dragon, Sierpiński, Plant, Bush, Koch, Tree, Gosper) — generations, angle, length controls | SVG turtle graphics |
-| **Emergence** | Gray‑Scott reaction‑diffusion + Conway's Game of Life — brush seeding, real‑time simulation | Canvas simulation |
-| **Attractors** | 6 attractor types (De Jong, Clifford, Sprott‑Linz, Lorenz, Hénon, Ikeda) — up to 1M points | Canvas additive blending |
-| **Foundation** | Fractal dimension comparison chart + iteration depth analysis | Observable Plot |
+| Tab | Description | Visualization |
+|-----|-------------|--------------|
+| **Fractals** | Mandelbrot & Julia set explorer | HD Canvas (1520×950) — pan, zoom, 6 palettes, iteration control |
+| **L‑Systems** | Recursive turtle graphics | SVG renderer — 7 presets, animated reveal, generations/angle controls |
+| **Emergence** | Gray‑Scott reaction‑diffusion + Game of Life | Canvas simulation — brush seeding, live parameter tuning |
+| **Attractors** | Strange attractors (6 types) | Histogram-based HD rendering — up to 1M points, real‑time coefficient sliders |
+| **Foundation** | Philosophy & economic connection | Observable Plot charts — fractal dimension comparison, iteration depth analysis |
 
-### Deploy
+### Design
 
-Push to `main`, GitHub Pages deploys automatically via `.github/workflows/pages.yml`.
+- **Light theme** — warm off-white (#fafaf8), teal accent (#0d7b6e), white surface cards
+- **Framed visualizations** — each interactive viz lives in a bordered card (max 760px) within the page content
+- **HD canvases** — Fractals & Attractors render at 1520×950; Emergence at 760×520
+- **Responsive** — mobile/tablet/desktop with nav collapse at 480px
+- **Accessible** — skip link, ARIA landmarks, focus-visible, prefers-reduced-motion
 
 ### Local Dev
-
-Serve the root directory with any static server:
 
 ```bash
 python3 -m http.server 8000
 # → http://localhost:8000
 ```
+
+### Deploy
+
+Push to `main` — GitHub Pages deploys via `.github/workflows/pages.yml`.
 
 ---
 

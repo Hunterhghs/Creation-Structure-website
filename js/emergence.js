@@ -1,5 +1,6 @@
 /* ============================================================
    Creation Structure — Emergence: Reaction-Diffusion & CA
+   Light theme, framed viz card, HD grid
    ============================================================ */
 
 (function () {
@@ -9,359 +10,199 @@
   const ctx = canvas.getContext('2d');
 
   /* ---- State ---- */
-  let simType = 'gray-scott'; // 'gray-scott' | 'game-of-life'
+  let simType = 'gray-scott';
   let playing = true;
-  let brushSize = 8;
+  let brushSize = 6;
   let mouseDown = false;
 
-  // Gray-Scott params
-  let feedRate = 0.036;
-  let killRate = 0.061;
-  let Du = 0.16, Dv = 0.08;
-
-  // Game of Life params
-  let golFps = 10;
-  let golInterval = null;
+  let feedRate = 0.036, killRate = 0.061;
+  const Du = 0.16, Dv = 0.08;
+  let golFps = 10, golTimer = null;
 
   let frameCount = 0;
-
-  // Grids
   let gridW, gridH;
-  let u, v;   // Gray-Scott
-  let golGrid; // Game of Life
+  let u, v, golGrid;
 
-  /* ---- Resize ---- */
-  function resize() {
-    const container = document.getElementById('emergence-container');
-    const rect = container.getBoundingClientRect();
-    const w = Math.max(400, Math.min(800, Math.floor(rect.width)));
-    const h = Math.floor(w * 0.75);
-    canvas.width = w;
-    canvas.height = h;
-    gridW = Math.floor(w / 4);  // 4px cells for performance
-    gridH = Math.floor(h / 4);
-    initGrids();
+  /* ---- Init Grids ---- */
+  function resizeGrid() {
+    gridW = Math.floor(canvas.width / 3);   // 3px cells ≈ 507 cells for 1520-wide
+    gridH = Math.floor(canvas.height / 3);  // ≈ 317 cells for 950-tall
+    // Actually use canvas dimensions: 760 × 520 → ~253 × 173 at 3px
+    gridW = Math.floor(canvas.width / 2.5);
+    gridH = Math.floor(canvas.height / 2.5);
   }
 
-  /* ---- Initialize Grids ---- */
   function initGrids() {
+    resizeGrid();
     if (simType === 'gray-scott') {
       u = new Float32Array(gridW * gridH);
       v = new Float32Array(gridW * gridH);
-
-      // Fill U with 1.0 (full feed), seed V with random patch
-      for (let i = 0; i < gridW * gridH; i++) {
-        u[i] = 1.0;
-        v[i] = 0.0;
-      }
-
-      // Seed a rectangular patch of V in the center
-      const cx = Math.floor(gridW / 2);
-      const cy = Math.floor(gridH / 2);
-      const rw = Math.floor(gridW * 0.15);
-      const rh = Math.floor(gridH * 0.15);
-      for (let y = cy - rh; y < cy + rh; y++) {
-        for (let x = cx - rw; x < cx + rw; x++) {
+      for (let i = 0; i < gridW * gridH; i++) { u[i] = 1.0; v[i] = 0.0; }
+      // Seed center patch
+      const cx = Math.floor(gridW / 2), cy = Math.floor(gridH / 2);
+      const r = Math.floor(Math.min(gridW, gridH) * 0.08);
+      for (let y = cy - r; y < cy + r; y++) {
+        for (let x = cx - r; x < cx + r; x++) {
           if (x >= 0 && x < gridW && y >= 0 && y < gridH) {
             const idx = y * gridW + x;
-            v[idx] = 0.5 + Math.random() * 0.2;
-            u[idx] = 0.5 + Math.random() * 0.2;
+            v[idx] = 0.5 + Math.random() * 0.25;
+            u[idx] = 0.4 + Math.random() * 0.3;
           }
         }
       }
     } else {
       golGrid = new Uint8Array(gridW * gridH);
-      // Seed random
-      for (let i = 0; i < gridW * gridH; i++) {
-        golGrid[i] = Math.random() > 0.75 ? 1 : 0;
-      }
+      for (let i = 0; i < gridW * gridH; i++) golGrid[i] = Math.random() > 0.78 ? 1 : 0;
     }
     frameCount = 0;
     document.getElementById('emerge-frame').textContent = '0';
   }
 
-  /* ---- Seed Pattern at Position ---- */
+  /* ---- Seed at Mouse ---- */
   function seedAt(mx, my) {
     const rect = canvas.getBoundingClientRect();
-    const scaleX = gridW / rect.width;
-    const scaleY = gridH / rect.height;
-    const cx = Math.floor((mx - rect.left) * scaleX);
-    const cy = Math.floor((my - rect.top) * scaleY);
-
+    const sx = gridW / rect.width, sy = gridH / rect.height;
+    const cx = Math.floor((mx - rect.left) * sx);
+    const cy = Math.floor((my - rect.top) * sy);
     for (let dy = -brushSize; dy <= brushSize; dy++) {
       for (let dx = -brushSize; dx <= brushSize; dx++) {
-        if (dx * dx + dy * dy > brushSize * brushSize) continue;
-        const x = cx + dx, y = cy + dy;
-        if (x < 0 || x >= gridW || y < 0 || y >= gridH) continue;
-        const idx = y * gridW + x;
-        if (simType === 'gray-scott') {
-          v[idx] = 0.5 + Math.random() * 0.3;
-          u[idx] = 0.3 + Math.random() * 0.4;
-        } else {
-          golGrid[idx] = 1;
-        }
+        if (dx*dx + dy*dy > brushSize*brushSize) continue;
+        const x = cx+dx, y = cy+dy;
+        if (x<0||x>=gridW||y<0||y>=gridH) continue;
+        const idx = y*gridW + x;
+        if (simType==='gray-scott') {
+          v[idx] = 0.5+Math.random()*0.35;
+          u[idx] = 0.3+Math.random()*0.4;
+        } else { golGrid[idx]=1; }
       }
     }
   }
 
   /* ---- Gray-Scott Step ---- */
-  function grayScottStep() {
-    const nextU = new Float32Array(gridW * gridH);
-    const nextV = new Float32Array(gridW * gridH);
-
-    for (let y = 0; y < gridH; y++) {
-      for (let x = 0; x < gridW; x++) {
-        const idx = y * gridW + x;
-
-        // Laplacian (5-point stencil)
-        const xm1 = x > 0 ? x - 1 : gridW - 1;
-        const xp1 = x < gridW - 1 ? x + 1 : 0;
-        const ym1 = y > 0 ? y - 1 : gridH - 1;
-        const yp1 = y < gridH - 1 ? y + 1 : 0;
-
-        const lapU = u[ym1 * gridW + x] + u[yp1 * gridW + x] + u[y * gridW + xm1] + u[y * gridW + xp1] - 4 * u[idx];
-        const lapV = v[ym1 * gridW + x] + v[yp1 * gridW + x] + v[y * gridW + xm1] + v[y * gridW + xp1] - 4 * v[idx];
-
-        const uvv = u[idx] * v[idx] * v[idx];
-        nextU[idx] = u[idx] + Du * lapU - uvv + feedRate * (1 - u[idx]);
-        nextV[idx] = v[idx] + Dv * lapV + uvv - (feedRate + killRate) * v[idx];
-
-        // Clamp
-        nextU[idx] = Math.max(0, Math.min(1, nextU[idx]));
-        nextV[idx] = Math.max(0, Math.min(1, nextV[idx]));
+  function gsStep() {
+    const nu = new Float32Array(gridW*gridH), nv = new Float32Array(gridW*gridH);
+    for (let y=0; y<gridH; y++) {
+      for (let x=0; x<gridW; x++) {
+        const i = y*gridW+x;
+        const xm=(x>0?x-1:gridW-1), xp=(x<gridW-1?x+1:0);
+        const ym=(y>0?y-1:gridH-1), yp=(y<gridH-1?y+1:0);
+        const lu = u[ym*gridW+x]+u[yp*gridW+x]+u[y*gridW+xm]+u[y*gridW+xp]-4*u[i];
+        const lv = v[ym*gridW+x]+v[yp*gridW+x]+v[y*gridW+xm]+v[y*gridW+xp]-4*v[i];
+        const uvv = u[i]*v[i]*v[i];
+        nu[i] = Math.max(0,Math.min(1, u[i]+Du*lu-uvv+feedRate*(1-u[i])));
+        nv[i] = Math.max(0,Math.min(1, v[i]+Dv*lv+uvv-(feedRate+killRate)*v[i]));
       }
     }
-
-    u = nextU;
-    v = nextV;
+    u=nu; v=nv;
   }
 
-  /* ---- Game of Life Step ---- */
-  function gameOfLifeStep() {
-    const next = new Uint8Array(gridW * gridH);
-    for (let y = 0; y < gridH; y++) {
-      for (let x = 0; x < gridW; x++) {
-        const idx = y * gridW + x;
-        let neighbors = 0;
-        for (let dy = -1; dy <= 1; dy++) {
-          for (let dx = -1; dx <= 1; dx++) {
-            if (dx === 0 && dy === 0) continue;
-            const nx = (x + dx + gridW) % gridW;
-            const ny = (y + dy + gridH) % gridH;
-            neighbors += golGrid[ny * gridW + nx];
+  /* ---- GoL Step ---- */
+  function golStep() {
+    const next = new Uint8Array(gridW*gridH);
+    for (let y=0; y<gridH; y++) {
+      for (let x=0; x<gridW; x++) {
+        const i=y*gridW+x; let n=0;
+        for (let dy=-1; dy<=1; dy++)
+          for (let dx=-1; dx<=1; dx++) {
+            if (dx===0&&dy===0) continue;
+            n += golGrid[((y+dy+gridH)%gridH)*gridW+((x+dx+gridW)%gridW)];
           }
-        }
-        if (golGrid[idx] === 1) {
-          next[idx] = (neighbors === 2 || neighbors === 3) ? 1 : 0;
-        } else {
-          next[idx] = (neighbors === 3) ? 1 : 0;
-        }
+        next[i] = golGrid[i]===1 ? (n===2||n===3?1:0) : (n===3?1:0);
       }
     }
-    golGrid = next;
+    golGrid=next;
   }
 
   /* ---- Render ---- */
   function renderGrid() {
-    const imageData = ctx.createImageData(gridW, gridH);
-    const data = imageData.data;
+    // Create image at grid resolution, then scale up
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = gridW; offCanvas.height = gridH;
+    const octx = offCanvas.getContext('2d');
+    const img = octx.createImageData(gridW, gridH);
+    const d = img.data;
 
-    if (simType === 'gray-scott') {
-      for (let i = 0; i < gridW * gridH; i++) {
-        const idx4 = i * 4;
-        // Map U to blue, V to red/green
-        const r = Math.round(v[i] * 255);
-        const g = Math.round(u[i] * v[i] * 180);
-        const b = Math.round(u[i] * 255);
-        data[idx4] = r;
-        data[idx4 + 1] = g;
-        data[idx4 + 2] = b;
-        data[idx4 + 3] = 255;
-      }
-    } else {
-      for (let i = 0; i < gridW * gridH; i++) {
-        const idx4 = i * 4;
-        if (golGrid[i] === 1) {
-          data[idx4] = 0;
-          data[idx4 + 1] = 212;
-          data[idx4 + 2] = 170;
-          data[idx4 + 3] = 255;
+    for (let i=0; i<gridW*gridH; i++) {
+      const i4=i*4;
+      if (simType==='gray-scott') {
+        // U→blue channel, V→red/green channels, light bg
+        d[i4]   = Math.round(v[i]*200 + 40);
+        d[i4+1] = Math.round(u[i]*v[i]*140 + 20);
+        d[i4+2] = Math.round(u[i]*180 + 20);
+        d[i4+3] = 255;
+      } else {
+        if (golGrid[i]===1) {
+          d[i4]=13; d[i4+1]=123; d[i4+2]=110; d[i4+3]=255;
         } else {
-          data[idx4] = 8;
-          data[idx4 + 1] = 8;
-          data[idx4 + 2] = 12;
-          data[idx4 + 3] = 255;
+          d[i4]=250; d[i4+1]=248; d[i4+2]=245; d[i4+3]=255;
         }
       }
     }
-
-    // Scale up from grid to canvas
+    octx.putImageData(img,0,0);
     ctx.imageSmoothingEnabled = false;
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = gridW;
-    tempCanvas.height = gridH;
-    tempCanvas.getContext('2d').putImageData(imageData, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(offCanvas,0,0,canvas.width,canvas.height);
   }
 
-  /* ---- Animation Loop ---- */
+  /* ---- Loop ---- */
   let animId;
   function loop() {
-    if (playing) {
-      if (simType === 'gray-scott') {
-        // Run 2 steps per frame for speed
-        for (let s = 0; s < 2; s++) grayScottStep();
-        frameCount++;
-        renderGrid();
-        document.getElementById('emerge-frame').textContent = frameCount;
-        document.getElementById('emerge-pattern').textContent =
-          `F=${feedRate.toFixed(3)} k=${killRate.toFixed(3)}`;
-      }
+    if (playing && simType==='gray-scott') {
+      for (let s=0; s<2; s++) gsStep();
+      frameCount++;
+      renderGrid();
+      document.getElementById('emerge-frame').textContent = frameCount;
+      document.getElementById('emerge-pattern').textContent =
+        `F=${feedRate.toFixed(3)} k=${killRate.toFixed(3)}`;
     }
     animId = requestAnimationFrame(loop);
   }
 
-  // Game of Life uses its own interval
-  function startGolLoop() {
-    stopGolLoop();
-    golInterval = setInterval(function () {
-      if (playing && simType === 'game-of-life') {
-        gameOfLifeStep();
-        frameCount++;
-        renderGrid();
-        document.getElementById('emerge-frame').textContent = frameCount;
-        document.getElementById('emerge-pattern').textContent = 'Conway\'s Game of Life';
-      }
-    }, 1000 / golFps);
-  }
+  function startGol() { stopGol(); golTimer=setInterval(()=>{
+    if (playing && simType==='game-of-life') { golStep(); frameCount++; renderGrid();
+    document.getElementById('emerge-frame').textContent=frameCount;
+    document.getElementById('emerge-pattern').textContent='Game of Life'; }
+  },1000/golFps);}
+  function stopGol() { if(golTimer){clearInterval(golTimer);golTimer=null;} }
 
-  function stopGolLoop() {
-    if (golInterval) { clearInterval(golInterval); golInterval = null; }
-  }
-
-  /* ---- Mouse Interaction ---- */
-  canvas.addEventListener('mousedown', function (e) {
-    mouseDown = true;
-    seedAt(e.clientX, e.clientY);
-  });
-
-  canvas.addEventListener('mousemove', function (e) {
-    if (mouseDown) seedAt(e.clientX, e.clientY);
-    // Show brush cursor size via CSS
-  });
-
-  window.addEventListener('mouseup', function () { mouseDown = false; });
-
-  canvas.addEventListener('wheel', function (e) {
-    e.preventDefault();
-    brushSize = Math.max(1, Math.min(30, brushSize + (e.deltaY > 0 ? -1 : 1)));
-  });
-
-  canvas.addEventListener('touchstart', function (e) {
-    e.preventDefault();
-    mouseDown = true;
-    seedAt(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: false });
-
-  canvas.addEventListener('touchmove', function (e) {
-    e.preventDefault();
-    if (mouseDown) seedAt(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: false });
-
-  canvas.addEventListener('touchend', function () { mouseDown = false; });
+  /* ---- Mouse ---- */
+  canvas.addEventListener('mousedown',e=>{mouseDown=true;seedAt(e.clientX,e.clientY);});
+  canvas.addEventListener('mousemove',e=>{if(mouseDown)seedAt(e.clientX,e.clientY);});
+  window.addEventListener('mouseup',()=>{mouseDown=false;});
+  canvas.addEventListener('wheel',e=>{e.preventDefault(); brushSize=Math.max(1,Math.min(25,brushSize+(e.deltaY>0?-1:1)));});
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();mouseDown=true;seedAt(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(mouseDown)seedAt(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+  canvas.addEventListener('touchend',()=>{mouseDown=false;});
 
   /* ---- Controls ---- */
-  document.querySelectorAll('[data-sim]').forEach(btn => {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('[data-sim]').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      simType = this.dataset.sim;
-      document.getElementById('gs-controls').style.display =
-        simType === 'gray-scott' ? 'flex' : 'none';
-      document.getElementById('gol-controls').style.display =
-        simType === 'game-of-life' ? 'flex' : 'none';
-      stopGolLoop();
-      initGrids();
-      if (simType === 'game-of-life') startGolLoop();
-    });
+  document.querySelectorAll('[data-sim]').forEach(btn=>{btn.addEventListener('click',function(){
+    document.querySelectorAll('[data-sim]').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    simType=this.dataset.sim;
+    document.getElementById('gs-controls').style.display=simType==='gray-scott'?'flex':'none';
+    document.getElementById('gol-controls').style.display=simType==='game-of-life'?'flex':'none';
+    stopGol(); initGrids(); if(simType==='game-of-life')startGol();
+  })});
+
+  document.getElementById('gs-feed').addEventListener('input',function(){feedRate=parseInt(this.value)/1000;document.getElementById('gs-feed-val').textContent=feedRate.toFixed(3);});
+  document.getElementById('gs-kill').addEventListener('input',function(){killRate=parseInt(this.value)/1000;document.getElementById('gs-kill-val').textContent=killRate.toFixed(3);});
+  document.getElementById('gol-speed').addEventListener('input',function(){golFps=parseInt(this.value);document.getElementById('gol-speed-val').textContent=golFps+' fps';stopGol();startGol();});
+
+  document.getElementById('emerge-play').addEventListener('click',function(){playing=!playing;this.textContent=playing?'Pause':'Play';if(playing)this.classList.add('accent');else this.classList.remove('accent');});
+  document.getElementById('emerge-reset').addEventListener('click',()=>{stopGol();initGrids();if(simType==='game-of-life')startGol();});
+  document.getElementById('emerge-random').addEventListener('click',()=>{
+    stopGol();
+    if(simType==='gray-scott'){for(let i=0;i<gridW*gridH;i++){u[i]=1;v[i]=0;}
+      for(let p=0;p<8;p++){const cx=Math.floor(Math.random()*gridW),cy=Math.floor(Math.random()*gridH),rr=Math.floor(3+Math.random()*10);
+        for(let dy=-rr;dy<=rr;dy++)for(let dx=-rr;dx<=rr;dx++){const x=cx+dx,y=cy+dy;if(x>=0&&x<gridW&&y>=0&&y<gridH){const idx=y*gridW+x;v[idx]=Math.random()*0.7;u[idx]=0.3+Math.random()*0.4;}}}
+    }else{for(let i=0;i<gridW*gridH;i++)golGrid[i]=Math.random()>0.7?1:0;}
+    if(simType==='game-of-life')startGol();
   });
 
-  document.getElementById('gs-feed').addEventListener('input', function () {
-    feedRate = parseInt(this.value) / 1000;
-    document.getElementById('gs-feed-val').textContent = feedRate.toFixed(3);
-  });
-
-  document.getElementById('gs-kill').addEventListener('input', function () {
-    killRate = parseInt(this.value) / 1000;
-    document.getElementById('gs-kill-val').textContent = killRate.toFixed(3);
-  });
-
-  document.getElementById('gol-speed').addEventListener('input', function () {
-    golFps = parseInt(this.value);
-    document.getElementById('gol-speed-val').textContent = golFps + ' fps';
-    stopGolLoop();
-    startGolLoop();
-  });
-
-  document.getElementById('emerge-play').addEventListener('click', function () {
-    playing = !playing;
-    this.textContent = playing ? 'Pause' : 'Play';
-    if (playing) this.classList.add('accent');
-    else this.classList.remove('accent');
-  });
-
-  document.getElementById('emerge-reset').addEventListener('click', function () {
-    stopGolLoop();
-    initGrids();
-    if (simType === 'game-of-life') startGolLoop();
-  });
-
-  document.getElementById('emerge-random').addEventListener('click', function () {
-    stopGolLoop();
-    if (simType === 'gray-scott') {
-      // Random seed
-      for (let i = 0; i < gridW * gridH; i++) {
-        u[i] = 1.0;
-        v[i] = 0.0;
-      }
-      // Multiple random patches
-      for (let p = 0; p < 8; p++) {
-        const cx = Math.floor(Math.random() * gridW);
-        const cy = Math.floor(Math.random() * gridH);
-        const rr = Math.floor(3 + Math.random() * 10);
-        for (let dy = -rr; dy <= rr; dy++) {
-          for (let dx = -rr; dx <= rr; dx++) {
-            const x = cx + dx, y = cy + dy;
-            if (x >= 0 && x < gridW && y >= 0 && y < gridH) {
-              const idx = y * gridW + x;
-              v[idx] = Math.random() * 0.7;
-              u[idx] = 0.3 + Math.random() * 0.4;
-            }
-          }
-        }
-      }
-    } else {
-      for (let i = 0; i < gridW * gridH; i++) {
-        golGrid[i] = Math.random() > 0.7 ? 1 : 0;
-      }
-      initGrids();
-    }
-    if (simType === 'game-of-life') startGolLoop();
-  });
-
-  /* ---- Page Visibility ---- */
-  window.addEventListener('page-shown', function (e) {
-    if (e.detail.page === 'emergence') {
-      resize();
-    }
-  });
+  /* ---- Page ---- */
+  window.addEventListener('page-shown',e=>{if(e.detail.page==='emergence'){resizeGrid();initGrids();}});
 
   /* ---- Init ---- */
-  window.addEventListener('resize', resize);
-  resize();
-  initGrids();
-  startGolLoop(); // Won't run since current sim is gray-scott
-  loop();
+  resizeGrid(); initGrids(); loop();
 
 })();
